@@ -37,26 +37,12 @@ class Session:
         self.reset()
         return self.preset
 
-    # 导入用户会话
-    def load_user_session(self, msg) -> str:
-        import ast
-        config = ast.literal_eval(msg)
-        self.set_preset(config[0]['content'])
-        self.conversation = config[1:]
-
-        return f'导入会话: {len(self.conversation)}条\n' \
-               f'导入人格: {self.preset}'
-
-    # 导出用户会话
-    def dump_user_session(self):
-        return str([{"role": "system", "content": self.preset}] + self.conversation)
-
     # 会话
     async def get_chat_response(self, reset: bool, msg) -> str:
         if config.gpt3_key == '':
             return f'无API Keys，请在配置文件中配置'
 
-        def check_and_reset() -> bool:
+        def date_reset():
             # 超过一天重置
             from datetime import datetime
             last = datetime.fromtimestamp(self.last_timestamp)
@@ -65,9 +51,8 @@ class Session:
             if delta.days > 0:
                 self.chat_count = 0
                 self.reset()
-            return False
         
-        check_and_reset()
+        date_reset()
 
         import tiktoken
         try:
@@ -108,19 +93,33 @@ def get_user_session(user_id) -> Session:
 chat_handler = on_command(config.name, aliases={config.aliases}, priority=5, block=True)
 
 @chat_handler.handle()
-async def _(matcher: Matcher, event: Event, arg: Message = CommandArg()):
+async def _(matcher: Matcher, event: Event, args: Message = CommandArg()):
     session_id = event.get_session_id()
-    msg = arg.extract_plain_text().strip()
+    arg = args.extract_plain_text().strip()
+    at = MessageSegment.at(event.get_user_id())
+    msg = ""
+    subcommands = [cmd.split(" ")[0] for cmd in config.subcommands.keys()]
+    reset = True
+    if(arg.startswith(subcommands[0])):
+        arg = arg[arg.find(subcommands[0]) + len(subcommands[0]):].strip()
+        if(arg == ""):
+            await matcher.finish(Message(at + "你的GPT预设是：" + get_user_session(session_id).preset))
+        else:
+            get_user_session(session_id).set_preset(arg)
+            await matcher.finish(Message(at + "已设置GPT预设：" + arg))
+    elif(arg.startswith(subcommands[1])):
+        msg = arg[arg.find(subcommands[1]) + len(subcommands[1]):].strip()
+        reset = False
+    else:
+        msg = arg
     if not msg:
         return
-
     if session_id in user_lock and user_lock[session_id]:
-        await matcher.finish("消息太快啦～请稍后", at_sender=True)
+        await matcher.finish(Message(at + "消息太快啦～请稍后"))
 
     user_lock[session_id] = True
-    resp = await get_user_session(session_id).get_chat_response(True, msg)
+    resp = await get_user_session(session_id).get_chat_response(reset, msg)
 
     # 发送消息
-    at = MessageSegment.at(event.get_user_id())
-    await matcher.send(Message(at + resp))
     user_lock[session_id] = False
+    await matcher.finish(Message(at + resp))

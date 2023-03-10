@@ -9,12 +9,12 @@ help_handler = on_command(config.name, aliases={config.aliases}, priority=5, blo
 default_start = list(get_driver().config.command_start)[0]
 
 @help_handler.handle()
-async def handle_content(event: Event, matcher: Matcher, args: Message = CommandArg()):
+async def _(event: Event, matcher: Matcher, args: Message = CommandArg()):
     arg = args.extract_plain_text()
     at = MessageSegment.at(event.get_user_id())
     result = ''
     subcommands = list(config.subcommands.keys())
-    if(arg == subcommands[0]):
+    if(arg == ""):
         result = get_plugin_help('help')
     elif(arg == subcommands[1]):
         result = get_all_plugin_help()

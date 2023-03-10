@@ -8,6 +8,6 @@ full_description = \
 aliases = ("?")
 subcommands = {
     "" : "获取此帮助",
-    "list" : "获取指令列表",
+    "-l" : "获取指令列表",
     "<指令>" : "获取指定指令帮助"
 }

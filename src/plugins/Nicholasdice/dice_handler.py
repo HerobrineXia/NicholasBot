@@ -8,5 +8,5 @@ from . import config
 dice_handler = on_command(config.name, aliases={config.aliases}, priority=5, block=True)
 
 @dice_handler.handle()
-async def handle_roll(matcher: Matcher):
+async def _(matcher: Matcher):
     await matcher.send("没写完！")
