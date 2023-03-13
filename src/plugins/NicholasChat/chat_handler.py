@@ -49,7 +49,6 @@ class Session:
             now = datetime.fromtimestamp(time.time())
             delta = now - last
             if delta.days > 0:
-                self.chat_count = 0
                 self.reset()
         
         date_reset()
@@ -110,6 +109,9 @@ async def _(matcher: Matcher, event: Event, args: Message = CommandArg()):
     elif(arg.startswith(subcommands[1])):
         msg = arg[arg.find(subcommands[1]) + len(subcommands[1]):].strip()
         reset = False
+    elif(arg.startswith(subcommands[2])):
+        get_user_session(session_id).set_preset(config.gpt3_preset)
+        await matcher.finish(Message(at + "已恢复初始GPT预设：" + config.gpt3_preset))
     else:
         msg = arg
     if not msg:
