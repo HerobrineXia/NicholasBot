@@ -11,7 +11,7 @@ max_char = "MAX优势"
 dice_char = "D"
 valid_char = left_bracket + right_bracket + digit_char + symbol + min_char + max_char + dice_char
 
-def eval(input_str: str) -> Tuple[int,str]:
+def eval_dice_exp(input_str: str) -> Tuple[int,str]:
     input_str = input_str.strip().upper().replace(" ","")
     if(len(input_str)) == 0:
         return (0, "")
@@ -126,17 +126,17 @@ def dice(a: str) -> Tuple[int,str]:
 
 
 def bracket(a: str) -> Tuple[int,str]:
-    result = eval(a[1:-1])
+    result = eval_dice_exp(a[1:-1])
     return (result[0], "(" + result[1] + ")")
 
 def add(a: str, b: str) -> Tuple[int,str]:
-    left = eval(a)
-    right = eval(b)
+    left = eval_dice_exp(a)
+    right = eval_dice_exp(b)
     return (left[0] + right[0], left[1] + "+" + right[1])
 
 def minus(a: str, b: str) -> Tuple[int,str]:
-    left = eval(a)
-    right = eval(b)
+    left = eval_dice_exp(a)
+    right = eval_dice_exp(b)
     return (left[0] - right[0], left[1] + "-" + right[1])
 
 def repeat(a: str, b: str) -> Tuple[int,str]:
@@ -145,7 +145,7 @@ def repeat(a: str, b: str) -> Tuple[int,str]:
     count = digit(a)
     total_result = 0
     for i in range(count):
-        result = eval(b)
+        result = eval_dice_exp(b)
         total_result += result[0]
         output_left += result[1]
         output_right += str(result[0])
