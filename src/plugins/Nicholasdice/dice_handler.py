@@ -17,7 +17,7 @@ async def _(event: Event, matcher: Matcher, args: Message = CommandArg()):
         if(input_arg == ""):
             input_arg = "d"
         result = dice.eval_dice_exp(input_arg)
-        result_str = str(result[1]) + "=" + str(result[0])
+        result_str = input_arg + "=" + str(result[1]) + "=" + str(result[0])
     except Exception as e:
         result_str = str(e)
     await matcher.finish(Message(at + "\n" + result_str))

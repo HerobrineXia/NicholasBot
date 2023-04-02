@@ -54,18 +54,21 @@ class Session:
         date_reset()
 
         import tiktoken
+        require_token = 0
         try:
             # 长度超过设置时，清空会话
             encoding = tiktoken.encoding_for_model(config.gpt3_model)
-            if self.total_tokens + len(encoding.encode(msg)) > config.gpt3_max_tokens or reset:
+            input_token = len(encoding.encode(self.preset + msg))
+            if input_token + self.total_tokens > config.gpt3_max_tokens or reset:
                 self.reset()
+            require_token = config.gpt3_max_tokens - input_token
         except Exception:
             self.reset()
             return f'无法获取模型编码，可能网络出错或模型不存在'
 
         res, ok = await get_chat_response(self.preset,
                                           self.conversation,
-                                          msg)
+                                          msg, require_token)
         if ok:
             self.chat_count += 1
             self.last_timestamp = int(time.time())

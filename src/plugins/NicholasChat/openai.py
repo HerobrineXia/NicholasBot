@@ -9,7 +9,7 @@ def remove_punctuation(text):
             return text[i:]
     return ""
 
-async def get_chat_response(preset: str, conversation: list, msg: str) -> Tuple[Any, bool]:
+async def get_chat_response(preset: str, conversation: list, msg: str, max_token: int) -> Tuple[Any, bool]:
     if gpt3_proxy:
         proxies = {
             "http://": gpt3_proxy,
@@ -30,10 +30,11 @@ async def get_chat_response(preset: str, conversation: list, msg: str) -> Tuple[
             json={
                 "model": gpt3_model,
                 "messages": system + conversation,
-                "max_tokens": gpt3_max_tokens,
+                "max_tokens": max_token,
             },
         )
         response = response.json()
+        print(response)
         res: str = remove_punctuation(response['choices'][0]['message']['content'].strip())
         conversation.append({"role": "assistant", "content": res})
         return response, True

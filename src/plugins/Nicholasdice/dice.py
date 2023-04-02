@@ -124,7 +124,6 @@ def dice(a: str) -> Tuple[int,str]:
         dice_str_result += str(dice_total_result)
     return (dice_total_result, dice_str_result)
 
-
 def bracket(a: str) -> Tuple[int,str]:
     result = eval_dice_exp(a[1:-1])
     return (result[0], "(" + result[1] + ")")
