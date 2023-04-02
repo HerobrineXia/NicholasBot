@@ -61,7 +61,7 @@ class Session:
             input_token = len(encoding.encode(self.preset + msg))
             if input_token + self.total_tokens > config.gpt3_max_tokens or reset:
                 self.reset()
-            require_token = config.gpt3_max_tokens - input_token
+            require_token = config.gpt3_max_tokens - input_token - self.total_tokens
         except Exception:
             self.reset()
             return f'无法获取模型编码，可能网络出错或模型不存在'

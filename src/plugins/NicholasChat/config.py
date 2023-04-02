@@ -1,11 +1,11 @@
 # 配置文件
-name = "chatgpt"
+name = "帮帮忙"
 descritpion = "询问ChatGPT"
 full_description = \
 """
 向ChatGPT询问问题
 """
-aliases = ("chat")
+aliases = ("bbm")
 subcommands = {
     "-p [预设消息]" : "获取/设置用户的当前预设",
     "-c <消息>" : "继续上一次的对话",
