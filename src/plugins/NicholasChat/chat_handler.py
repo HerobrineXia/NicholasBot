@@ -121,6 +121,7 @@ async def _(matcher: Matcher, event: Event, args: Message = CommandArg()):
         get_user_session(session_id).set_preset(config.gpt3_preset)
         await matcher.finish(Message(at + "已恢复初始GPT预设：" + config.gpt3_preset))
     elif(arg.startswith(subcommands[3])):
+        arg = arg[arg.find(subcommands[3]) + len(subcommands[3]):].strip()
         try:
             num = float(arg)
         except Exception:
