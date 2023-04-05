@@ -128,6 +128,7 @@ async def _(matcher: Matcher, event: Event, args: Message = CommandArg()):
         if(num < 0 or num > 2):
             await matcher.finish(Message(at + "请输入0-2中的有效的数字"))
         get_user_session(session_id).set_temperature(num)
+        await matcher.finish(Message(at + "已设置GPT随机度：" + str(num)))
     else:
         msg = arg
     if not msg:
