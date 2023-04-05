@@ -34,7 +34,6 @@ async def get_chat_response(preset: str, conversation: list, msg: str, max_token
             },
         )
         response = response.json()
-        print(response)
         res: str = remove_punctuation(response['choices'][0]['message']['content'].strip())
         conversation.append({"role": "assistant", "content": res})
         return response, True
