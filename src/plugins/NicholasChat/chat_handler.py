@@ -15,6 +15,7 @@ class Session:
     def __init__(self, _id):
         self.session_id = _id
         self.preset = config.gpt3_preset
+        self.temperature = config.gpt3_temperature
         self.conversation = []
         self.reset()
         self.token_record = []
@@ -27,6 +28,10 @@ class Session:
         self.total_tokens = 0
         self.chat_count = 1
 
+    # 设置随机值
+    def set_temperature(self, value: float):
+        self.temperature = value
+    
     # 重置人格
     def reset_preset(self):
         self.preset = config.gpt3_preset
@@ -68,7 +73,7 @@ class Session:
 
         res, ok = await get_chat_response(self.preset,
                                           self.conversation,
-                                          msg, require_token)
+                                          msg, require_token, self.temperature)
         if ok:
             self.chat_count += 1
             self.last_timestamp = int(time.time())
@@ -115,6 +120,14 @@ async def _(matcher: Matcher, event: Event, args: Message = CommandArg()):
     elif(arg.startswith(subcommands[2])):
         get_user_session(session_id).set_preset(config.gpt3_preset)
         await matcher.finish(Message(at + "已恢复初始GPT预设：" + config.gpt3_preset))
+    elif(arg.startswith(subcommands[3])):
+        try:
+            num = float(arg)
+        except Exception:
+            num = -1
+        if(num < 0 or num > 2):
+            await matcher.finish(Message(at + "请输入0-2中的有效的数字"))
+        get_user_session(session_id).set_temperature(num)
     else:
         msg = arg
     if not msg:
