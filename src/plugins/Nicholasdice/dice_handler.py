@@ -6,8 +6,8 @@ from nonebot.params import CommandArg, Arg, ArgPlainText
 from nonebot.adapters.onebot.v11.message import Message, MessageSegment
 from . import config
 from . import dice
-dice_handler = on_command(config.name, aliases={config.aliases}, priority=5, block=True)
 
+dice_handler = on_command(config.name, aliases={config.aliases}, priority=5, block=True)
 @dice_handler.handle()
 async def _(event: Event, matcher: Matcher, args: Message = CommandArg()):
     result_str = ""
