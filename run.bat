@@ -1,3 +1,4 @@
 @echo off
-.\venv\Scripts\activate
-nb start --reload
+call .\venv\Scripts\activate
+.\venv\Scripts\nb start --reload
+pause
