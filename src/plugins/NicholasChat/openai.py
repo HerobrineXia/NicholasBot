@@ -35,10 +35,13 @@ async def get_chat_response(preset: str, conversation: list, msg: str, max_token
             },
         )
         response = response.json()
-        res: str = remove_punctuation(response['choices'][0]['message']['content'].strip())
-        conversation.append({"role": "assistant", "content": res})
-        return response, True
     except httpx.RequestError as e:
         return "网络炸了，我知道你很急，但你别急，等会再试", False
     except Exception as e:
         return f"发生未知错误: {e}", False
+    try:
+        res: str = remove_punctuation(response['choices'][0]['message']['content'].strip())
+        conversation.append({"role": "assistant", "content": res})
+        return response, True
+    except Exception as e:
+        return f"无效的返回消息: {response}", False
