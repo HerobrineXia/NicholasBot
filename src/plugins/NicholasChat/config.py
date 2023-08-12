@@ -18,7 +18,7 @@ subcommands = {
 gpt3_preset = "以下是与AI助手的对话。助理乐于助人、富有创意、聪明而且非常友好。"
 gpt3_max_tokens = 4000
 gpt3_temperature = 1
-gpt3_model = "gpt-3.5-turbo"
+gpt3_model = "gpt-4"
 gpt3_proxy = "http://127.0.0.1:7890"
 
 # 私有配置
